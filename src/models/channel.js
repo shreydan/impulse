@@ -15,6 +15,7 @@ const ChannelSchema = new Schema({
   postCount: {
     type: Number,
     default: 0,
+    min: 0,
   },
   posts: [
     {
@@ -25,6 +26,7 @@ const ChannelSchema = new Schema({
   followers: {
     type: Number,
     default: 0,
+    min: 0,
   },
   createdAt: {
     type: Date,

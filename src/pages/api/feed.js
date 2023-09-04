@@ -8,17 +8,17 @@ async function getchannelposts(req, res) {
   const { channel_id } = req.query;
   const channel = await Channel.findById(channel_id);
   const posts = await channel.populate({ path: "posts", model: Post });
-  const onlyposts = posts.posts;
-  const fullposts = onlyposts.map((post) => {
-    const user = User.findById(post.user);
-    return {
+  const fullposts = [];
+  for (const post of posts.posts) {
+    const user = await User.findById(post.user);
+    fullposts.push({
       user_id: post.user,
       username: user.username,
       content: post.content,
       createdAt: post.createdAt,
       popularity: post.popularity,
-    };
-  });
+    });
+  }
   return res.status(200).json({
     channel_name: channel.name,
     channel_id: channel_id,

@@ -19,6 +19,7 @@ const UserSchema = new Schema({
   postCount: {
     type: Number,
     default: 0,
+    min: 0,
   },
   createdAt: {
     type: Date,

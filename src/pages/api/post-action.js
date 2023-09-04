@@ -41,20 +41,25 @@ async function createPost(req, res) {
 }
 
 async function votePost(req, res) {
-  const { post_id, voteType } = req.body;
+  const { post_id, votetype } = req.body;
   const post = await Post.findById(post_id);
-  post.votePost(voteType);
+  post.votePost(votetype);
   return res.status(200).json({
-    message: `vote has been ${voteType}d!`,
+    message: `post has been ${votetype}d!`,
     popularity: post.popularity,
   });
 }
 
 async function deletePost(req, res) {
-  const { post_id } = req.body;
+  const { user_id, post_id } = req.body;
   const post = await Post.findByIdAndDelete(post_id);
   let channel_id = post.channel;
-  let user_id = post.user;
+  let post_user_id = post.user;
+  if (post_user_id !== user_id) {
+    return res.status(400).json({
+      PermissionError: "you can't delete someone else's post",
+    });
+  }
   await User.findByIdAndUpdate(user_id, {
     $pull: {
       posts: post_id,
