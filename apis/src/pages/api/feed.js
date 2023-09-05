@@ -37,6 +37,7 @@ async function gethomeposts(req, res) {
   for (const channel of channels.channels) {
     for (const post_id of channel.posts) {
       const post = await Post.findById(post_id);
+      const channel = await Channel.findById(post.channel);
       const postchannel = await Channel.findById(post.channel);
       const postauthor = await User.findById(post.user);
       posts.push({
@@ -44,6 +45,7 @@ async function gethomeposts(req, res) {
         user_id: post.user,
         username: postauthor.username,
         channel_id: post.channel,
+        channel_name: channel.name,
         channel_name: postchannel.name,
         content: post.content,
         popularity: post.popularity,
