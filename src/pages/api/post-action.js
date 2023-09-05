@@ -52,33 +52,35 @@ async function votePost(req, res) {
 
 async function deletePost(req, res) {
   const { user_id, post_id } = req.body;
-  const post = await Post.findByIdAndDelete(post_id);
+  const post = await Post.findById(post_id);
   let channel_id = post.channel;
   let post_user_id = post.user;
-  if (post_user_id !== user_id) {
+  if (post_user_id.toString() !== user_id) {
     return res.status(400).json({
       PermissionError: "you can't delete someone else's post",
     });
+  } else {
+    await post.deleteOne();
+    await User.findByIdAndUpdate(user_id, {
+      $pull: {
+        posts: post_id,
+      },
+      $inc: {
+        postCount: -1,
+      },
+    });
+    await Channel.findByIdAndUpdate(channel_id, {
+      $pull: {
+        posts: post_id,
+      },
+      $inc: {
+        postCount: -1,
+      },
+    });
+    return res.status(200).json({
+      message: "post has been deleted",
+    });
   }
-  await User.findByIdAndUpdate(user_id, {
-    $pull: {
-      posts: post_id,
-    },
-    $inc: {
-      postCount: -1,
-    },
-  });
-  await Channel.findByIdAndUpdate(channel_id, {
-    $pull: {
-      posts: post_id,
-    },
-    $inc: {
-      postCount: -1,
-    },
-  });
-  return res.status(200).json({
-    message: "post has been deleted",
-  });
 }
 
 export default async function handler(req, res) {
