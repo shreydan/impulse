@@ -4,6 +4,9 @@ import 'package:impulse/community/screens/create_community_screen.dart';
 import 'package:impulse/community/screens/create_post_screen.dart';
 import 'package:impulse/core/constants/constants.dart';
 import 'package:impulse/features/profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../auth/screens/login_screen.dart';
 
 class CommunityListDrawer extends ConsumerStatefulWidget {
   const CommunityListDrawer({super.key});
@@ -30,8 +33,8 @@ class _CommunityListDrawerState extends ConsumerState<CommunityListDrawer> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (ctx) => Profile()));
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (ctx) => const Profile()));
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -53,8 +56,8 @@ class _CommunityListDrawerState extends ConsumerState<CommunityListDrawer> {
                     children: [
                       Container(
                         margin: const EdgeInsets.only(left: 15),
-                        child: const Text('Lakhan',
-                            style: TextStyle(
+                        child:  Text(userName,
+                            style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold)),
@@ -113,16 +116,24 @@ class _CommunityListDrawerState extends ConsumerState<CommunityListDrawer> {
               },
             ),
             const Spacer(),
-            Container(
-              height: 50,
-              alignment: Alignment.center,
-              width: double.infinity,
-              color: Colors.red,
-              child: const Text('Logout',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w500)),
+            GestureDetector(
+              onTap: () async {
+                SharedPreferences.getInstance().then((value) => value.clear());
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (ctx) => const LoginScreen()),
+                    (route) => false);
+              },
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                width: double.infinity,
+                color: Colors.red,
+                child: const Text('Logout',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500)),
+              ),
             )
           ],
         ),

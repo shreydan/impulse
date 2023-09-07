@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:impulse/core/constants/constants.dart';
 
@@ -55,10 +56,13 @@ class _ProfileState extends ConsumerState<Profile>
     var prov = ref.watch(dataProvider);
     return Scaffold(
         appBar: AppBar(
+          systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.white,
+              statusBarIconBrightness: Brightness.dark),
           elevation: 0,
           centerTitle: true,
-          backgroundColor: const Color.fromRGBO(167, 111, 255, 1),
-          title: const Text("@lakhan"),
+          backgroundColor: const Color.fromRGBO(5, 12, 102, 1),
+          title:  Text("@${prov.userName}"),
         ),
         body: Column(children: [
           Container(
@@ -68,23 +72,17 @@ class _ProfileState extends ConsumerState<Profile>
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (ctx) => const Profile()));
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 80,
-                    width: 80,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(80),
-                        color: Colors.grey.shade200),
-                    child: Icon(
-                      Icons.person,
-                      size: 40,
-                      color: Colors.grey.shade500,
-                    ),
+                Container(
+                  alignment: Alignment.center,
+                  height: 80,
+                  width: 80,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(80),
+                      color: Colors.grey.shade200),
+                  child: Icon(
+                    Icons.person,
+                    size: 40,
+                    color: Colors.grey.shade500,
                   ),
                 ),
                 Column(
@@ -163,6 +161,7 @@ class _ProfileState extends ConsumerState<Profile>
           const SizedBox(
             height: 15,
           ),
+          const Divider(),
           TabBar(indicatorWeight: 5, controller: _tabController, tabs: const [
             Tab(
               child: Text(
@@ -205,8 +204,9 @@ class _ProfileState extends ConsumerState<Profile>
                             size: 40,
                           ),
                         ),
-                        onDismissed: (val){
-                          prov.deletePost(postID: prov.userPosts[index]['post_id']);
+                        onDismissed: (val) {
+                          prov.deletePost(
+                              postID: prov.userPosts[index]['post_id']);
                           setState(() {
                             prov.userPosts.removeAt(index);
                           });
@@ -277,12 +277,15 @@ class _ProfileState extends ConsumerState<Profile>
                                 //       const SizedBox(
                                 //         width: 5,
                                 //       ),
-                                //       Text(
-                                //         prov.userPosts[index]['channel_name']??''
-                                //            ,
-                                //         style: TextStyle(
-                                //             fontSize: 14,
-                                //             fontWeight: FontWeight.bold),
+                                //       SizedBox(
+                                //         width: 150,
+                                //         child: Text(
+                                //           prov.userPosts[index]['channel_name']??''
+                                //              ,
+                                //           style: const TextStyle(
+                                //               fontSize: 14,
+                                //               fontWeight: FontWeight.bold),
+                                //         ),
                                 //       ),
                                 //     ],
                                 //   ),

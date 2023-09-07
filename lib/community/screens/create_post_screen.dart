@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:impulse/core/constants/constants.dart';
 
@@ -26,7 +27,10 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     var prov = ref.watch(dataProvider);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(167, 111, 255, 1),
+        systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.white,
+            statusBarIconBrightness: Brightness.dark),
+        backgroundColor: const Color.fromRGBO(5, 12, 102, 1),
         title: const Text('Create a Post'),
       ),
       body: SingleChildScrollView(
@@ -119,7 +123,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                   alignment: Alignment.center,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                      color: const Color.fromRGBO(167, 111, 255, 1),
+                      color: const Color.fromRGBO(5, 12, 102, 1),
                       borderRadius: BorderRadius.circular(50)),
                   child: loading
                       ? const SizedBox(

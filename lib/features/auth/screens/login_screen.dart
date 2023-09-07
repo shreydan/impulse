@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 50),
             Text(
-              'Welcome to Impulsive',
+              'Welcome to Impulse',
               style: GoogleFonts.lato(
                   fontSize: 30,
                   color: Colors.black,

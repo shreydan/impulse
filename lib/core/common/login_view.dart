@@ -44,6 +44,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
             ),
             const SizedBox(height: 20),
             AuthField(
+              password: true,
               controller: passwordController,
               hintText: 'Password',
             ),
@@ -61,6 +62,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
                         username: usernameController.text,
                         password: passwordController.text)
                     .then((value) {
+                  userID = prov.userID;
+                  userName = prov.userName;
+                  prov.getallPosts();
+                  prov.getuserPosts();
+                  prov.getallChannels();
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const HomeScreen(),
                   ));
@@ -82,7 +88,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                 alignment: Alignment.center,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                    color: const Color.fromRGBO(167, 111, 255, 1),
+                    color: const Color.fromRGBO(5, 12, 102, 1),
                     borderRadius: BorderRadius.circular(50)),
                 child: loading
                     ? const SizedBox(

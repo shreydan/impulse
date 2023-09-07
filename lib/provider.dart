@@ -9,11 +9,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DataProvider extends ChangeNotifier {
   http.Client httpClient = http.Client();
   late String userID;
+  late String userName;
   List userChannels = [];
   List allChannels = [];
   List allPosts = [];
   List userPosts = [];
   List channelPosts = [];
+  bool allPostsLoading = false;
   Future auth({required String username, required String password}) async {
     var url = Uri.parse('$baseUrl/auth');
     var response = await httpClient.post(url, body: {
@@ -25,8 +27,12 @@ class DataProvider extends ChangeNotifier {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('user', json.decode(response.body)["user_id"]);
       userID = json.decode(response.body)["user_id"];
+
       await prefs.setString(
-          'name', username.toUpperCase() + username.substring(1));
+          'name', username.toUpperCase()[0] + username.substring(1));
+      userName = username.toUpperCase()[0] + username.substring(1);
+      log(userName);
+
       return response.body;
     } else {
       throw Exception();
@@ -96,15 +102,17 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future getallPosts() async {
+    allPostsLoading = true;
     var url = Uri.https('impulse-backend.vercel.app', '/api/feed',
         {'user_id': userID, 'feedtype': 'home'});
     var response = await httpClient.get(url);
-    log(response.body.toString());
     if (response.statusCode == 200) {
       allPosts = json.decode(response.body)["posts"];
+      allPostsLoading = false;
       notifyListeners();
       return response.body;
     } else {
+      allPostsLoading = false;
       notifyListeners();
       throw Exception();
     }
@@ -128,6 +136,23 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
+  Future votePost({required String postID, required String voteType}) async {
+    var response =
+        await httpClient.put(Uri.parse('$baseUrl/post-action'), body: {
+      'post_id': postID,
+      'votetype': voteType,
+    });
+    await getuserPosts();
+
+    if (response.statusCode == 200) {
+      log(response.body.toString());
+      return response.body;
+    } else {
+      log(response.body.toString());
+      throw Exception();
+    }
+  }
+
   Future getUserChannels() async {
     var url = Uri.https('impulse-backend.vercel.app', '/api/list-channels',
         {'listtype': 'user', 'user_id': userID});
@@ -135,6 +160,21 @@ class DataProvider extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       userChannels = json.decode(response.body)["channels"];
+      return response.body;
+    } else {
+      log(response.body.toString());
+      throw Exception();
+    }
+  }
+
+  Future getallChannels() async {
+    var url = Uri.https('impulse-backend.vercel.app', '/api/list-channels', {
+      'listtype': 'all',
+    });
+    var response = await httpClient.get(url);
+
+    if (response.statusCode == 200) {
+      allChannels = json.decode(response.body)["channels"];
       return response.body;
     } else {
       log(response.body.toString());
