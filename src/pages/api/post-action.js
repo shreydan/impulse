@@ -42,11 +42,15 @@ async function createPost(req, res) {
 
 async function votePost(req, res) {
   const { post_id, votetype } = req.body;
-  const post = await Post.findById(post_id);
-  post.votePost(votetype);
+  const change = votetype === "upvote" ? 1 : -1;
+  const post = await Post.findByIdAndUpdate(post_id, {
+    $inc: {
+      popularity: change,
+    },
+  });
   return res.status(200).json({
     message: `post has been ${votetype}d!`,
-    popularity: post.popularity,
+    popularity: post.popularity + change,
   });
 }
 

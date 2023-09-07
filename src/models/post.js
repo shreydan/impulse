@@ -28,16 +28,5 @@ const PostSchema = new Schema({
   },
 });
 
-PostSchema.methods = {
-  votePost(voteType) {
-    if (voteType === "upvote") {
-      this.popularity++;
-    } else if (voteType === "downvote") {
-      this.popularity--;
-    }
-    this.save();
-  },
-};
-
 const Post = mongoose.models.Post || mongoose.model("Post", PostSchema);
 export default Post;
