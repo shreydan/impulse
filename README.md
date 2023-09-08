@@ -17,8 +17,9 @@
   - profilefeed: posts made by user
 
 # project by:
-    - [@shreydan](https://github.com/shreydan)
-    - [@1akhanBaheti](https://github.com/1akhanBaheti/)
-    - [@LavanyaG23](https://github.com/LavanyaG23)
+
+- [@shreydan](https://github.com/shreydan)
+- [@1akhanBaheti](https://github.com/1akhanBaheti/)
+- [@LavanyaG23](https://github.com/LavanyaG23)
 
 
